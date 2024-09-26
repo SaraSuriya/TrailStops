@@ -5,6 +5,7 @@ function DetailSummary({ markers }) {
   if (!markers || Object.keys(markers).length === 0) {
     return <div style={{zIndex:"-100", position:"absolute", top:"1px"}}>No markers placed!</div>;
   }
+  // Checks if any markers are displayed on the screen.
 
   const sortedMarkers = Object.values(markers || {}).sort((a, b) => a.order - b.order);
   
