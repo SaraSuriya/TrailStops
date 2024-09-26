@@ -6,6 +6,9 @@ import { Button } from '@mui/material';
 import routeCalculation from '../../helperFunctions/routeCalculation';
 
 function SearchResultScreen({ marker, closeOverlay, markers, setMarkers }) {
+  const [loading, setLoading] = useState(true);
+  // Creating a 'loading' state so it doesn't say 'No accommodation found' when they are still loading.
+
   const [nearAccommodation, setNearAccommodation] = useState([]);
   const [selectedAccommodation, setSelectedAccommodation] = useState("")
 
@@ -13,10 +16,19 @@ function SearchResultScreen({ marker, closeOverlay, markers, setMarkers }) {
   useEffect(() => {
     if (marker.position) {
       const [lon, lat] = [marker.position.lat, marker.position.lng];
+      setLoading(true); // Start loading
       APIService.extractAccommodations(lon, lat)
         .then((data) => {
           setNearAccommodation(Array.isArray(data) ? data : []);
         })
+        .catch((error) => {
+          console.error("Error fetching accommodations:", error);
+          setNearAccommodation([]);
+        })
+        .finally(() => {
+          // Set loading to false when fetch is complete, regardless of success or failure
+          setLoading(false);
+        });
       }
        if (marker._id) {
         DBService.getAccommodation("aidan@test.com", marker._id)
@@ -36,12 +48,17 @@ function SearchResultScreen({ marker, closeOverlay, markers, setMarkers }) {
     setMarkers(updatedMarkers);
     DBService.addAccommodation("aidan@test.com", accommodation, marker._id)
   }
+  // Email should be whatever the current user's email or user id is
+
+  const calculationSettings = {
+    distance: 'km' // or 'miles', 'meters', etc.
+  };
 
   async function deleteMarker (markerId) {
     DBService.removeMarker("aidan@test.com", markerId);
     const updatedMarkers = { ...markers };
     delete updatedMarkers[markerId];
-    const calculatedMarkers = await routeCalculation(Object.values(updatedMarkers))
+    const calculatedMarkers = await routeCalculation(Object.values(updatedMarkers), calculationSettings)
     .then((calculatedMarkers) => {
       setMarkers(calculatedMarkers);
       closeOverlay();
@@ -65,7 +82,7 @@ function SearchResultScreen({ marker, closeOverlay, markers, setMarkers }) {
               </div>
             ))
               
-          ) : (
+          ) : loading ? <p>Accommodation loading...</p> : (
             <p>No accommodation found.</p>
           )}
         </ul>

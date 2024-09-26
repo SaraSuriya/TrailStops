@@ -25,3 +25,5 @@ export default async function createGPXArray(url) {
     console.error("Error loading GPX:", error);
   }
 }
+
+// Fetches a GPX (GPS Exchange Format) file from a URL, parses it, and extracts the track points (latitude and longitude) into an array of objects.
