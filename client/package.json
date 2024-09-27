@@ -50,6 +50,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.20.5",
     "@babel/plugin-transform-modules-commonjs": "^7.12.13",
-    "babel-jest": "^26.6.3"
+    "babel-jest": "^26.6.3",
+    "jest": "^27.5.1"
   }
 }
