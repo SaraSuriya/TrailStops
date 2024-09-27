@@ -1,4 +1,8 @@
-async function getMarkers (user_id) {
+import { CalculationSettings, Distance, MarkerInterface, User } from "../Interfaces/interfaces";
+
+
+async function getMarkers(user_id: string)
+  : Promise<void | MarkerInterface[]> {
   try {
     const response = await fetch(`http://localhost:3001/mapMarkers?user_id=${user_id}`);
     const data = await response.json();
@@ -8,31 +12,34 @@ async function getMarkers (user_id) {
   }
 }
 
-async function addMarker (user_id, marker, updatedMarkers, settings ) {
+async function addMarker
+  (user_id: string, marker: MarkerInterface, updatedMarkers: MarkerInterface, settings: CalculationSettings)
+  : Promise<void | MarkerInterface> {
   try {
     const _id = marker._id
     const response = await fetch('http://localhost:3001/mapMarkers', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({_id: _id, user_id: user_id, marker: marker, updatedMarkers: updatedMarkers, settings: settings}),
-  })
-  const data = await response.json();
-  return data;
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ _id, user_id, marker, updatedMarkers, settings }),
+    })
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.log("Error adding marker:", error);
   }
 }
 
-async function updateAllMarkers (markers) {
+async function updateAllMarkers(markers: MarkerInterface[])
+  : Promise<void | string> {
   try {
     const response = await fetch('http://localhost:3001/updateAllMarkers', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({markers: markers})
+      body: JSON.stringify({ markers })
     })
     const data = await response.json();
     return data;
@@ -41,14 +48,16 @@ async function updateAllMarkers (markers) {
   }
 }
 
-async function addUser (name, email, password) {
+async function addUser
+  (name: string, email: string, password: string)
+  : Promise<void | User> {
   try {
     const response = await fetch('http://localhost:3001/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({name: name, email: email, password: password}),
+      body: JSON.stringify({ name: name, email: email, password: password }),
     })
     const data = await response.json();
     return data;
@@ -57,7 +66,8 @@ async function addUser (name, email, password) {
   }
 }
 
-async function getUser (email) {
+async function getUser(email: string)
+  : Promise<void | User> {
   try {
     const response = await fetch(`http://localhost:3001/user?email=${email}`);
     const data = await response.json();
@@ -67,7 +77,8 @@ async function getUser (email) {
   }
 }
 
-async function getAccommodation (email, markerId) {
+async function getAccommodation(email: string, markerId: string)
+  : Promise<void | MarkerInterface> {
   try {
     const response = await fetch(`http://localhost:3001/accommodation?user_id=${email}&markerId=${markerId}`);
     const data = await response.json();
@@ -77,7 +88,8 @@ async function getAccommodation (email, markerId) {
   }
 }
 
-async function addAccommodation(email, hotel, markerId) {
+async function addAccommodation(email: string, hotel: string, markerId: string)
+  : Promise<void | any> { //receives a Mongo object that confirms if the hotel was added to the marker
   try {
     const response = await fetch('http://localhost:3001/accommodation', {
       method: 'PUT',
@@ -94,14 +106,16 @@ async function addAccommodation(email, hotel, markerId) {
   }
 }
 
-async function removeMarker(userId, markerId) { // TODO Fix bug where it marker is only delete after second attempt sometimes.
+// TODO Fix bug where it marker is only delete after second attempt sometimes.
+async function removeMarker(userId : string , markerId : string) 
+: Promise<void | any> { //receives a Mongo object that confirms if the hotel was added to the marker 
   try {
     const response = await fetch('http://localhost:3001/mapMarkers', {
-      method:'DELETE',
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({user_id: userId,_id: markerId}),
+      body: JSON.stringify({ user_id: userId, _id: markerId }),
     })
     const data = await response.json();
     return data;

@@ -1,5 +1,8 @@
+import { PointLngLat } from "../Interfaces/interfaces"
+
 // load GPX track as an array of points
-export default async function createGPXArray(url) {
+export default async function createGPXArray(url: string): Promise<PointLngLat[] | undefined> {
+
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -11,11 +14,11 @@ export default async function createGPXArray(url) {
     const gpxDoc = parser.parseFromString(gpxText, "application/xml");
 
     const trackPoints = gpxDoc.getElementsByTagName("trkpt");
-    const latLngArray = [];
+    const latLngArray: PointLngLat[] = [];
 
     for (let i = 0; i < trackPoints.length; i++) {
-      const lat = trackPoints[i].getAttribute("lat");
-      const lon = trackPoints[i].getAttribute("lon");
+      const lat: any = trackPoints[i].getAttribute("lat");
+      const lon: any = trackPoints[i].getAttribute("lon");
 
       latLngArray.push({ lat: parseFloat(lat), lng: parseFloat(lon) });
     }
@@ -23,6 +26,7 @@ export default async function createGPXArray(url) {
     return latLngArray;
   } catch (error) {
     console.error("Error loading GPX:", error);
+
   }
 }
 

@@ -1,5 +1,5 @@
 // Function to calculate where the clicked point will land between the closest two points on the route
-export default function placeMarkerBetweenPoints(inputPoint, routePoint1, routePoint2) {
+export default function placeMarkerBetweenPoints(inputPoint: number[], routePoint1: number[], routePoint2: number[]) {
   const [inputPointLat, inputPointLon] = inputPoint;
   const [routePoint1Lat, routePoint1Lon] = routePoint1;
   const [routePoint2Lat, routePoint2Lon] = routePoint2;

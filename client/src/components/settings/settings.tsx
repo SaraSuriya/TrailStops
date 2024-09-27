@@ -4,7 +4,11 @@ import DBService from '../../services/DBService';
 import routeCalculation from '../../helperFunctions/routeCalculation';
 import { useEffect } from 'react';
 
-function Settings({ closeOverlay, settingsData, setSettingsData, markers, setMarkers }) {
+type SettingsPropsTypes = {
+   closeOverlay: any, settingsData: any, setSettingsData: any, markers: any, setMarkers: any ,setSettingsClicked : any
+}
+
+function Settings ({ closeOverlay, settingsData, setSettingsData, markers, setMarkers, setSettingsClicked }: SettingsPropsTypes) {
 
   // Effect to handle updates based on settingsData changes
   useEffect(() => {
@@ -19,11 +23,11 @@ function Settings({ closeOverlay, settingsData, setSettingsData, markers, setMar
     updateMarkers();
   }, [settingsData]); // Trigger on settingsData change
 
-  const changeSpeedSetting = (event) => {
+  const changeSpeedSetting = (event: any) => {
     setSettingsData({ ...settingsData, speed: Number(event.target.value) });
   };
 
-  const changeDistanceSetting = async (event) => {
+  const changeDistanceSetting = async (event :any) => {
     setSettingsData({ ...settingsData, distance: event.target.value });
     const updatedMarkers = await routeCalculation(Object.values(markers), { ...settingsData, distance: event.target.value });
     DBService.updateAllMarkers(updatedMarkers);
@@ -31,9 +35,9 @@ function Settings({ closeOverlay, settingsData, setSettingsData, markers, setMar
   };
 
   return (
-    <div style={{marginBottom:"10px"}}className="settingsScreen">
+    <div style={{ marginBottom: "10px" }} className="settingsScreen">
       <h1>Settings</h1>
-      <form style={{marginBottom:"10px"}}>
+      <form style={{ marginBottom: "10px" }}>
         <FormControl>
           <Select value={settingsData.speed} onChange={changeSpeedSetting}>
             <MenuItem value="2">2Kmph - Slow</MenuItem>

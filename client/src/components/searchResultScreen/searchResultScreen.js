@@ -12,7 +12,6 @@ function SearchResultScreen({ marker, closeOverlay, markers, setMarkers }) {
   const [nearAccommodation, setNearAccommodation] = useState([]);
   const [selectedAccommodation, setSelectedAccommodation] = useState("")
 
-
   useEffect(() => {
     if (marker.position) {
       const [lon, lat] = [marker.position.lat, marker.position.lng];
@@ -51,14 +50,15 @@ function SearchResultScreen({ marker, closeOverlay, markers, setMarkers }) {
   // Email should be whatever the current user's email or user id is
 
   const calculationSettings = {
-    distance: 'km' // or 'miles', 'meters', etc.
+    distance: 'km',
+    speed: 3 
   };
 
   async function deleteMarker (markerId) {
     DBService.removeMarker("aidan@test.com", markerId);
     const updatedMarkers = { ...markers };
     delete updatedMarkers[markerId];
-    const calculatedMarkers = await routeCalculation(Object.values(updatedMarkers), calculationSettings)
+    await routeCalculation(Object.values(updatedMarkers), calculationSettings)
     .then((calculatedMarkers) => {
       setMarkers(calculatedMarkers);
       closeOverlay();

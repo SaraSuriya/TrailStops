@@ -1,6 +1,6 @@
-export default function binarySearch(sortedRoute, targetLon) {
-  let low = 0;
-  let high = sortedRoute.length - 1;
+export default function binarySearch(sortedRoute: number[][], targetLon:number)  :number []{
+  let low :number = 0;
+  let high :number = sortedRoute.length - 1;
 
   // Check for edge cases where the target is outside the route bounds
   if (targetLon <= sortedRoute[low][1]) {

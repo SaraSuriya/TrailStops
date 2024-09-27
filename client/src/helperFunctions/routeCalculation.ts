@@ -1,36 +1,37 @@
 import createGPXArray from "./createGPXArray";
 import haversineDistanceCalc from "./haversineDistanceCalc";
 import isMarkerBetweenRoutePoints from "./checkMarkerPosition";
+import { CalculationSettings, PointLngLat } from "../Interfaces/interfaces";
 
 // loop through all points in route from index1 to index2 to calculate an accurate distance.
-function fullDistanceCalc(markerDist, routeArr, routeIndex1, routeIndex2, distance) {
+function fullDistanceCalc(markerDist: number, routeArr: PointLngLat[], routeIndex1: any, routeIndex2: any, distance: string): number {
   for (let i = routeIndex1; i < routeIndex2; i++) {
-    markerDist = markerDist + haversineDistanceCalc(routeArr[i], routeArr[i+1], distance);
+    markerDist = markerDist + haversineDistanceCalc(routeArr[i], routeArr[i + 1], distance);
   }
   return Math.round(markerDist);
 }
 
-function walkingTimeCalc(markerDist, speed) {
+function walkingTimeCalc(markerDist: number, speed: number) {
   return Math.round(markerDist / speed);
 }
 
-async function routeCalculation (markerArr, calculationSettings) {
-  const routeArr = await createGPXArray("WHW.gpx");
+async function routeCalculation(markerArr: PointLngLat[], calculationSettings: CalculationSettings) {
+  const routeArr: any = await createGPXArray("WHW.gpx");
   let markerArrCopy = JSON.parse(JSON.stringify(markerArr));
   // find where the markers fall between in the route
   for (let i = 0; i < markerArrCopy.length; i++) {  // loop through markerArr
     for (let j = 0; j < routeArr.length - 1; j++) { // loop through routeArr
-      if (isMarkerBetweenRoutePoints(markerArrCopy[i], routeArr[j], routeArr[j + 1])) { 
+      if (isMarkerBetweenRoutePoints(markerArrCopy[i], routeArr[j], routeArr[j + 1])) {
         markerArrCopy[i].prevIndex = j
-        markerArrCopy[i].nextIndex = j+1
+        markerArrCopy[i].nextIndex = j + 1
       }
     }
   }
   // TODO implement both ways search
 
   // sort markerArrCopy to to be in order of prevIndex
-  markerArrCopy.sort((a, b) => a.prevIndex - b.prevIndex);
-  
+  markerArrCopy.sort((a: any, b: any) => a.prevIndex - b.prevIndex);
+
   // calculate prev and next distance for each marker to their prev and next route point
   for (let i = 0; i < markerArrCopy.length; i++) {
     markerArrCopy[i].prevDist.dist = haversineDistanceCalc(routeArr[markerArrCopy[i].prevIndex], markerArrCopy[i].position, calculationSettings.distance);
@@ -41,16 +42,16 @@ async function routeCalculation (markerArr, calculationSettings) {
   for (let i = 0; i < markerArrCopy.length; i++) {
     if (markerArrCopy.length === 1) {
       markerArrCopy[i].prevDist.dist = fullDistanceCalc(markerArrCopy[i].prevDist.dist, routeArr, 0, markerArrCopy[i].prevIndex, calculationSettings.distance);
-      markerArrCopy[i].nextDist.dist = fullDistanceCalc(markerArrCopy[i].nextDist.dist, routeArr, markerArrCopy[i].nextIndex, routeArr.length-1, calculationSettings.distance);
+      markerArrCopy[i].nextDist.dist = fullDistanceCalc(markerArrCopy[i].nextDist.dist, routeArr, markerArrCopy[i].nextIndex, routeArr.length - 1, calculationSettings.distance);
     } else if (i === 0) {
       markerArrCopy[i].prevDist.dist = fullDistanceCalc(markerArrCopy[i].prevDist.dist, routeArr, 0, markerArrCopy[i].prevIndex, calculationSettings.distance);
-      markerArrCopy[i].nextDist.dist = fullDistanceCalc(markerArrCopy[i].nextDist.dist, routeArr, markerArrCopy[i].nextIndex, markerArrCopy[i+1].prevIndex, calculationSettings.distance);
+      markerArrCopy[i].nextDist.dist = fullDistanceCalc(markerArrCopy[i].nextDist.dist, routeArr, markerArrCopy[i].nextIndex, markerArrCopy[i + 1].prevIndex, calculationSettings.distance);
     } else if (i === markerArrCopy.length - 1) {
-      markerArrCopy[i].prevDist.dist = fullDistanceCalc(markerArrCopy[i].prevDist.dist, routeArr, markerArrCopy[i-1].nextIndex, markerArrCopy[i].prevIndex, calculationSettings.distance);
-      markerArrCopy[i].nextDist.dist = fullDistanceCalc(markerArrCopy[i].nextDist.dist, routeArr, markerArrCopy[i].nextIndex, routeArr.length-1, calculationSettings.distance);
+      markerArrCopy[i].prevDist.dist = fullDistanceCalc(markerArrCopy[i].prevDist.dist, routeArr, markerArrCopy[i - 1].nextIndex, markerArrCopy[i].prevIndex, calculationSettings.distance);
+      markerArrCopy[i].nextDist.dist = fullDistanceCalc(markerArrCopy[i].nextDist.dist, routeArr, markerArrCopy[i].nextIndex, routeArr.length - 1, calculationSettings.distance);
     } else {
-      markerArrCopy[i].prevDist.dist = fullDistanceCalc(markerArrCopy[i].prevDist.dist, routeArr, markerArrCopy[i-1].nextIndex, markerArrCopy[i].prevIndex, calculationSettings.distance);
-      markerArrCopy[i].nextDist.dist = fullDistanceCalc(markerArrCopy[i].nextDist.dist, routeArr, markerArrCopy[i].nextIndex, markerArrCopy[i+1].prevIndex, calculationSettings.distance);
+      markerArrCopy[i].prevDist.dist = fullDistanceCalc(markerArrCopy[i].prevDist.dist, routeArr, markerArrCopy[i - 1].nextIndex, markerArrCopy[i].prevIndex, calculationSettings.distance);
+      markerArrCopy[i].nextDist.dist = fullDistanceCalc(markerArrCopy[i].nextDist.dist, routeArr, markerArrCopy[i].nextIndex, markerArrCopy[i + 1].prevIndex, calculationSettings.distance);
     }
   }
 
@@ -68,11 +69,11 @@ async function routeCalculation (markerArr, calculationSettings) {
 
   //save marker route order in marker
   for (let i = 0; i < markerArrCopy.length; i++) {
-    markerArrCopy[i].order = i +1;
+    markerArrCopy[i].order = i + 1;
   }
 
   // change markers back to object
-  const output = markerArrCopy.reduce((acc, curr) => {
+  const output = markerArrCopy.reduce((acc: any, curr: any) => {
     acc[curr._id] = curr;
     return acc;
   }, {});
