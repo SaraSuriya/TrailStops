@@ -1,3 +1,6 @@
+ 
+ const BASE_URL = 'http://localhost:3001';
+ 
  async function getNearAccommodations(lat, lng) {
   try {
     const response = await fetch(`http://localhost:3001/getAccommodation?lat=${lat}&lon=${lng}`);

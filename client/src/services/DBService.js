@@ -1,6 +1,8 @@
+ const BASE_URL = 'http://localhost:3001';
+
 async function getMarkers (user_id) {
   try {
-    const response = await fetch(`http://localhost:3001/mapMarkers?user_id=${user_id}`);
+    const response = await fetch(`${BASE_URL}/mapMarkers?user_id=${user_id}`);
     const data = await response.json();
     return data;
   } catch (error) {
@@ -9,9 +11,10 @@ async function getMarkers (user_id) {
 }
 
 async function addMarker (user_id, marker, updatedMarkers, settings ) {
+  console.log(updatedMarkers);
   try {
     const _id = marker._id
-    const response = await fetch('http://localhost:3001/mapMarkers', {
+    const response = await fetch(`${BASE_URL}/mapMarkers`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -27,7 +30,7 @@ async function addMarker (user_id, marker, updatedMarkers, settings ) {
 
 async function updateAllMarkers (markers) {
   try {
-    const response = await fetch('http://localhost:3001/updateAllMarkers', {
+    const response = await fetch(`${BASE_URL}/updateAllMarkers`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -43,7 +46,7 @@ async function updateAllMarkers (markers) {
 
 async function addUser (name, email, password) {
   try {
-    const response = await fetch('http://localhost:3001/user', {
+    const response = await fetch(`${BASE_URL}/user`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -59,7 +62,7 @@ async function addUser (name, email, password) {
 
 async function getUser (email) {
   try {
-    const response = await fetch(`http://localhost:3001/user?email=${email}`);
+    const response = await fetch(`${BASE_URL}/user?email=${email}`);
     const data = await response.json();
     return data;
   } catch (error) {
@@ -69,7 +72,7 @@ async function getUser (email) {
 
 async function getAccommodation (email, markerId) {
   try {
-    const response = await fetch(`http://localhost:3001/accommodation?user_id=${email}&markerId=${markerId}`);
+    const response = await fetch(`${BASE_URL}/accommodation?user_id=${email}&markerId=${markerId}`);
     const data = await response.json();
     return data;
   } catch (error) {
@@ -79,7 +82,7 @@ async function getAccommodation (email, markerId) {
 
 async function addAccommodation(email, hotel, markerId) {
   try {
-    const response = await fetch('http://localhost:3001/accommodation', {
+    const response = await fetch(`${BASE_URL}/accommodation`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -96,7 +99,7 @@ async function addAccommodation(email, hotel, markerId) {
 
 async function removeMarker(userId, markerId) { // TODO Fix bug where it marker is only delete after second attempt sometimes.
   try {
-    const response = await fetch('http://localhost:3001/mapMarkers', {
+    const response = await fetch(`${BASE_URL}/mapMarkers`, {
       method:'DELETE',
       headers: {
         'Content-Type': 'application/json',
