@@ -32,7 +32,6 @@ describe('API Connection', () => {
 describe('GET /accommodationPic', () => {
 
     beforeAll(async () => {
-        // await mongoose.disconnect();
         const url = `mongodb://127.0.0.1/${databaseName}`;
         await mongoose.connect(url);
     })
@@ -67,14 +66,6 @@ describe('GET /accommodationPic', () => {
     // afterAll(async() => {
     //     await mongoose.disconnect();
     //     await mongoose.connection.close();
-    // })
-
-    // describe('receive accommodation info', () => {
-    //     test('should return a 200 status code', async () => {
-    //         const response = await request(app).get(`/accommodationPic?photo_reference=${photoRef}`)
-
-    //         await supertest(app).get(`/accommodationPic?photo_reference=${photoRef}`).expect(200);
-    //     })
     // })
 })
 

@@ -56,9 +56,13 @@ exports.addUser = async (req, res) => {
     return res.status(400).json({ message: 'All fields required '})
   }
   try {
-  const newUser = new User({ name, email, password });
-  const response = await newUser.save();
-  res.status(200).json(response);
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+        return res.status(400).json({ error: 'User with this email already exists' });
+    }
+    const newUser = new User({ name, email, password });
+    const response = await newUser.save();
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).send(`Server Error4: ${error}`);
   }
