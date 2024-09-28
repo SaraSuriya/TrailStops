@@ -1,7 +1,8 @@
 const supertest = require('supertest');
 const mockingoose = require('mockingoose');
 const createServer = require('../server.js');
-const photoRef = require('./__mocks__/mocks.js');
+const User = require('../models/schema')
+const photoRef = require('../__mocks__/mocks.js');
 const {addUser} = require('../controllers/DBController.js');
 const request = supertest;
 const router = require('../router.js')
@@ -27,20 +28,27 @@ describe('POST /user', () => {
         mockingoose.resetAll();
       });
 
-    describe('given a new name, email, and password', () => {
-        // it should save the user's details to the database
+    describe('given a name, email, and password', () => {
 
+        const req = {
+            body: {
+              name: 'tester',
+              email: 'tester@testing.com',
+              password: 'test',
+            },
+          };
+ 
         test('should respond with a 200 status code', async() => {
-            const req = {
-                body: {
-                  name: 'tester',
-                  email: 'tester@testing.com',
-                  password: 'test',
-                },
-              };
               const res = mockResponse(); 
               await addUser(req, res);
               expect(res.status).toHaveBeenCalledWith(200);
+        });
+
+        test('should save user details to the database', async() => {
+              const res = mockResponse(); 
+              mockingoose(User).toReturn(req.body, 'save');
+              await addUser(req, res);
+              expect(res.json).toHaveBeenCalledWith(req.body);
         });
         
     })
@@ -50,7 +58,7 @@ describe('POST /user', () => {
         // it should respond with a 400 status code
     })
 
-    describe('when the username and password fields are missing', () => {
+    describe('given no name, email, or password', () => {
 
         test('should respond with a 400 status code', async () => {
             const req = { body: {} }; 

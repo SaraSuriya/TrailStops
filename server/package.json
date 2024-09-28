@@ -3,8 +3,13 @@
   "type": "module",
   "version": "1.0.0",
   "main": "index.js",
+  "jest": {
+  "automock": false,
+  "setupFiles": [
+    "./setupJest.js"
+  ]},
   "scripts": {
-    "test": "jest --detectOpenHandles",
+    "test": "jest --verbose",
     "start": "node index.js"
   },
   "author": "",
@@ -27,6 +32,7 @@
   },
   "devDependencies": {
     "jest": "^29.7.0",
+    "jest-fetch-mock": "^3.0.3",
     "mockingoose": "^2.16.2",
     "supertest": "^7.0.0"
   }

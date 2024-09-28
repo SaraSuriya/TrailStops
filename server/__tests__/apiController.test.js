@@ -1,3 +1,4 @@
+
 const createServer = require('../server.js');
 const mockingoose = require('mockingoose');
 const router = require('../router.js');
@@ -12,7 +13,7 @@ const databaseName = 'test';
 
 const app = createServer();
 
-const photoRef = require('./__mocks__/mocks.js');
+const photoRef = require('../__mocks__/mocks.js');
 
 const mockResponse = () => {
   const res = {};
@@ -28,19 +29,18 @@ describe('API Connection', () => {
   })
 });
 
-describe('Integration tests', () => {
+describe('GET /accommodationPic', () => {
 
     beforeAll(async () => {
-        await mongoose.disconnect();
+        // await mongoose.disconnect();
         const url = `mongodb://127.0.0.1/${databaseName}`;
         await mongoose.connect(url);
     })
-
         afterEach(async () => {
         await mongoose.disconnect();
     })
 
-    describe('API Response Result', () => {
+    describe('given a photo reference', () => {
 
       it('should return a valid image', async() => {
         const res = mockResponse();
@@ -50,10 +50,8 @@ describe('Integration tests', () => {
           }
         }
         await getAccommodationPic(req, res);
-        // expect(response.body).toHaveProperty('data');
-        // expect(res.status).toHaveBeenCalledWith(200);
-
         expect(res.json).toHaveBeenCalledWith(expect.objectContaining({data: expect.anything()}))
+        // Checks if the mock function was called with an object containing a data property, which can have any value except null or undefined.
 
       });
 
