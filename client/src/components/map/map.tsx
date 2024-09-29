@@ -2,13 +2,13 @@ import "./map.css";
 import { useEffect, useState } from "react";
 import { Marker, MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import L from "leaflet";
+import "leaflet-gpx";
+import "leaflet/dist/leaflet.css";
 import GPXLayer from "../gpxMapLayer/gpxMapLayer";
+import { v4 as uuidv4 } from "uuid";
 import closestPoints from "../../helperFunctions/closestPoint";
 import routeCalculation from "../../helperFunctions/routeCalculation";
 import DBService from "../../services/DBService";
-import { v4 as uuidv4 } from "uuid";
-import "leaflet-gpx";
-import "leaflet/dist/leaflet.css";
 import { Button } from "@mui/material";
 import DetailSummary from "../detailSummary/detailSummary";
 import SearchResultScreen from "../searchResultScreen/searchResultScreen";
@@ -38,6 +38,7 @@ const MapComponent = () => {
   });
 
   const setGpxRouteFunc = (route: File) => {
+    console.log(route)
     setGpxRoute(route);
   };
 
@@ -178,7 +179,9 @@ const MapComponent = () => {
               alt="line render of a settings cog icon"
               onClick={() => setSettingsClicked(true)}
             />
-            <DetailSummary markers={markers} />
+            {Object.keys(markers).length > 0 &&
+            <DetailSummary markers={markers ||{}} />
+          }
           </>
         )}
       </div>

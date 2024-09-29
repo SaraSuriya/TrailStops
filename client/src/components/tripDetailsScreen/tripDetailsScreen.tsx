@@ -1,7 +1,14 @@
 import './tripDetailsScreen.css';
 import { Button } from '@mui/material';
+import { DynamicMarkers, MarkerInterface } from '../../Interfaces/interfaces';
 
-function TripDetailsScreen({ closeOverlay, markers = {}, setSelectedMarker }) {
+type TripDetailsScreenPropsTypes = {
+  setSelectedMarker: (marker: MarkerInterface)=>void;
+  closeOverlay: () => void;
+   markers: DynamicMarkers; 
+}
+
+function TripDetailsScreen({ closeOverlay, markers = {}, setSelectedMarker } : TripDetailsScreenPropsTypes) {
 
 
   const firstMarker = Object.values(markers).find(marker => marker.order === 1) || {
