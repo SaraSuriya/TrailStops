@@ -9,7 +9,9 @@
     "skipLibCheck": true ,                              /* Skip type checking all .d.ts files. */
     "esModuleInterop": true,                /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
     "outDir": "./dist",                                   /* Specify an output folder for all emitted files. */
-    "rootDir": "./src" 
+    "rootDir": "./src",
+    "types": ["jest", "node"],
+    "typeRoots": ["./node_modules/@types"]
   },
     "include": ["./**/*.ts"], // Incluir todos los archivos .ts
     "exclude": ["node_modules"] // Excluir node_modules

@@ -1,13 +1,8 @@
-import supertest from 'supertest';
 import mockingoose from 'mockingoose';
-import createServer from '../server';
 import { User, UserMarkers } from '../models/schema';
 import { addUser, getUser, addMarker } from '../controllers/DBController';
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
-
-const request = supertest;
-const app = createServer();
+import fetchMock from 'jest-fetch-mock';
 
 const mockResponse = (): Partial<Response> => {
     const res: Partial<Response> = {}; // Use Partial to allow optional properties
@@ -54,7 +49,7 @@ describe('POST /mapMarkers', () => {
             order: mockMarker.order
           }));
 
-          const req = {body: {
+          const req: Partial<Request> = {body: {
             _id: mockMarker._id,
             user_id: mockUserId,
             marker: mockMarker,
@@ -63,15 +58,15 @@ describe('POST /mapMarkers', () => {
           }}
 
         test('should respond with a 200 status code', async () => {
-            const res = mockResponse();
+            const res: Partial<Response> = mockResponse();
             mockingoose(UserMarkers).toReturn(req.body, 'save');
-            await addMarker(req, res);
+            await addMarker(req as Request, res as Response);
             expect(res.status).toHaveBeenCalledWith(200);
         })
         test('should save the new marker to the database', async () => {
-            const res = mockResponse();
+            const res: Partial<Response> = mockResponse();
             mockingoose(UserMarkers).toReturn(req.body, 'save'); // mock save the marker
-            await addMarker(req, res);
+            await addMarker(req as Request, res as Response);
             mockingoose(UserMarkers).toReturn(req.body, 'find'); // find the mock marker
             const foundMarker = await UserMarkers.find({ _id: req.body._id });
             expect(foundMarker).toEqual(expect.objectContaining({

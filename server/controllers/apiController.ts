@@ -46,7 +46,6 @@ export const getAccommodationPic = async (req: Request, res: Response): Promise<
 
 export const getAccommodationDetails = async (req: Request, res: Response): Promise<void> => {
   try {
-    // const { place_id } = req.query;
     const { place_id } = req.query as { place_id: string };
     const response = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?key=${apiKey}&place_id=${place_id}`);
     const data = await response.json();

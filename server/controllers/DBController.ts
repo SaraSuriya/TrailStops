@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
 import { User, UserMarkers } from '../models/schema';
-import { AddMarkerRequestBody } from '../types/markerInterfaces';
+import { AddMarkerRequestBody } from '../interfaces/marker-interfaces';
 
 export const getMarkers = async (req: Request, res: Response): Promise<void> => {
   try {
-    // const { user_id } = req.query;
     const { user_id } = req.query as { user_id: string };
     const response = await UserMarkers.find({user_id: user_id})
     const positions = response.map(marker => marker);
