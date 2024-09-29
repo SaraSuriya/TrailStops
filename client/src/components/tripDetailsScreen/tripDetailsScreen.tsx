@@ -1,6 +1,6 @@
 import './tripDetailsScreen.css';
 import { Button } from '@mui/material';
-import { DynamicMarkers, MarkerInterface } from '../../Interfaces/interfaces';
+import { Distance, DynamicMarkers, MarkerInterface } from '../../Interfaces/interfaces';
 
 type TripDetailsScreenPropsTypes = {
   setSelectedMarker: (marker: MarkerInterface)=>void;
