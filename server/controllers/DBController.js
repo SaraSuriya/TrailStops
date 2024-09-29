@@ -93,4 +93,5 @@ exports.addAccommodation = async (req, res) => {
     res.status(500).send(`Server Error6: ${error}`);
   }
 }
+// Delete accommodation when unselected
 

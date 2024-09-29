@@ -11,7 +11,6 @@ async function getMarkers (user_id) {
 }
 
 async function addMarker (user_id, marker, updatedMarkers, settings ) {
-  console.log(updatedMarkers);
   try {
     const _id = marker._id
     const response = await fetch(`${BASE_URL}/mapMarkers`, {
