@@ -23,11 +23,6 @@ function App()  : JSX.Element {
       path: "/map",
       element: <Map />,
     },
-    {
-      path: '/settings',
-      element: <Settings closeOverlay={undefined} settingsData={undefined} setSettingsData={undefined} markers={undefined} setMarkers={undefined} setSettingsClicked={undefined} />,
-      errorElement: <ErrorPage />,
-    },
     
   ]);
   

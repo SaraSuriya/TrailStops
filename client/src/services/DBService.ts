@@ -1,4 +1,4 @@
-import { CalculationSettings, Distance, MarkerInterface, User } from "../Interfaces/interfaces";
+import { CalculationSettings, DynamicMarkers, MarkerInterface, User } from "../Interfaces/interfaces";
 
 
 async function getMarkers(user_id: string)
@@ -13,8 +13,9 @@ async function getMarkers(user_id: string)
 }
 
 async function addMarker
-  (user_id: string, marker: MarkerInterface, updatedMarkers: MarkerInterface, settings: CalculationSettings)
+  (user_id: string, marker: MarkerInterface, updatedMarkers: DynamicMarkers, settings: CalculationSettings)
   : Promise<void | MarkerInterface> {
+    console.log('updatedMarkers',updatedMarkers)
   try {
     const _id = marker._id
     const response = await fetch('http://localhost:3001/mapMarkers', {
@@ -31,7 +32,7 @@ async function addMarker
   }
 }
 
-async function updateAllMarkers(markers: MarkerInterface[])
+async function updateAllMarkers(markers: DynamicMarkers)
   : Promise<void | string> {
   try {
     const response = await fetch('http://localhost:3001/updateAllMarkers', {

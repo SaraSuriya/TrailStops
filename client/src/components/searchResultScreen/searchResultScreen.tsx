@@ -4,12 +4,25 @@ import { useState, useEffect } from 'react';
 import DBService from '../../services/DBService';
 import { Button } from '@mui/material';
 import routeCalculation from '../../helperFunctions/routeCalculation';
+import { Accomodation, DynamicMarkers, MarkerInterface } from '../../Interfaces/interfaces';
 
-function SearchResultScreen({ marker, closeOverlay, markers, setMarkers }) {
+type SearchResultScreenPropsTypes = {
+  marker: MarkerInterface;
+  closeOverlay: () => void;
+   markers: DynamicMarkers; 
+   setMarkers: (newDynamcMarkers: DynamicMarkers) => void;
+}
+
+function SearchResultScreen({ 
+  marker , 
+  closeOverlay, 
+  markers, 
+  setMarkers } : SearchResultScreenPropsTypes) {
+ 
   const [loading, setLoading] = useState(true);
   // Creating a 'loading' state so it doesn't say 'No accommodation found' when they are still loading.
 
-  const [nearAccommodation, setNearAccommodation] = useState([]);
+  const [nearAccommodation, setNearAccommodation] = useState<Accomodation[]>([]);
   const [selectedAccommodation, setSelectedAccommodation] = useState("")
 
   useEffect(() => {
@@ -18,8 +31,9 @@ function SearchResultScreen({ marker, closeOverlay, markers, setMarkers }) {
       setLoading(true); // Start loading
       APIService.extractAccommodations(lon, lat)
         .then((data) => {
-          setNearAccommodation(Array.isArray(data) ? data : []);
-        })
+          if(data){
+          setNearAccommodation(data);
+      }})
         .catch((error) => {
           console.error("Error fetching accommodations:", error);
           setNearAccommodation([]);
@@ -41,7 +55,8 @@ function SearchResultScreen({ marker, closeOverlay, markers, setMarkers }) {
       }
   }, []);
 
-  function updateAccommodation (accommodation) {
+  function updateAccommodation (accommodation:any) {
+    console.log(accommodation)
     setSelectedAccommodation(accommodation)
     const updatedMarkers = { ...markers, [marker._id]:{...marker, hotel:accommodation}};
     setMarkers(updatedMarkers);
@@ -54,7 +69,7 @@ function SearchResultScreen({ marker, closeOverlay, markers, setMarkers }) {
     speed: 3 
   };
 
-  async function deleteMarker (markerId) {
+  async function deleteMarker (markerId:any) {
     DBService.removeMarker("aidan@test.com", markerId);
     const updatedMarkers = { ...markers };
     delete updatedMarkers[markerId];
@@ -71,13 +86,13 @@ function SearchResultScreen({ marker, closeOverlay, markers, setMarkers }) {
         <div className='accommodationOptions'>
         <ul className='accommodationList'>
           {nearAccommodation && nearAccommodation.length > 0 ? (
-            nearAccommodation.map((accommodation, index) => (
-              <div key={index}>
-              <li key={index}>{accommodation.name}
+            nearAccommodation.map((accommodation) => (
+              <div key={accommodation.name}>
+              <li>{accommodation.name}
                 <br />
                 {accommodation.vicinity}
               </li>
-              <img className='accommodationImage' src={accommodation.url.data} alt={accommodation.name} />
+              <img className='accommodationImage' src={accommodation.url} alt={accommodation.name} />
               <Button variant='contained' onClick={() => updateAccommodation(accommodation.name + " - " + accommodation.vicinity)}>Select</Button>
               </div>
             ))

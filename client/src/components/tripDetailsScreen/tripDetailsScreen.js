@@ -1,5 +1,4 @@
 import './tripDetailsScreen.css';
-import { useEffect } from 'react';
 import { Button } from '@mui/material';
 
 function TripDetailsScreen({ closeOverlay, markers = {}, setSelectedMarker }) {

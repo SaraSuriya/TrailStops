@@ -14,7 +14,7 @@ import DetailSummary from "../detailSummary/detailSummary";
 import SearchResultScreen from "../searchResultScreen/searchResultScreen";
 import Settings from "../settings/settings";
 import TripDetailsScreen from "../tripDetailsScreen/tripDetailsScreen";
-import { MarkerInterface } from "../../Interfaces/interfaces";
+import { DynamicMarkers, MarkerInterface } from "../../Interfaces/interfaces";
 
 // set icon for placed markers
 const defaultIcon = L.icon({
@@ -27,11 +27,11 @@ const defaultIcon = L.icon({
 
 const MapComponent = () => {
   const gpxFile = "/WHW.gpx";
-  const [markers, setMarkers] = useState({});
   const [gpxRoute, setGpxRoute] = useState<File>();
-  const [selectedMarker, setSelectedMarker] = useState(null);
+  const [markers, setMarkers] = useState<DynamicMarkers>({});
+  const [selectedMarker, setSelectedMarker] = useState<MarkerInterface | null>();
   const [detailsClicked, setDetailsClicked] = useState(false);
-  const [settingsClicked, setSettingsClicked] = useState(false);
+  const [settingsClicked, setSettingsClicked] = useState<Boolean>(false);
   const [settingsData, setSettingsData] = useState({
     distance: "km",
     speed: 3,
@@ -48,6 +48,7 @@ const MapComponent = () => {
           acc[curr._id] = curr;
           return acc;
         }, {});
+        console.log(dataOut);
         setMarkers(dataOut);
         if (dataOut && Object.keys(dataOut).length > 0) {
           const firstMarker = dataOut[Object.keys(dataOut)[0]];
@@ -74,13 +75,16 @@ const MapComponent = () => {
             user_id: "aidan@test.com",
             position: L.latLng([closestPoint[1], closestPoint[0]]),
             hotel: "",
-            prevDist: { distance: 0, time: 0 },
-            nextDist: { distance: 0, time: 0 },
+            prevDist: { dist: 0, time: 0 },
+            nextDist: { dist: 0, time: 0 },
             walkingSpeed: settingsData.speed,
             distanceMeasure: settingsData.distance,
           };
           // update markers state and add maker to database
-          let updatedMarkers = { ...markers, [newMarker._id]: newMarker };
+          let updatedMarkers: DynamicMarkers = {
+            ...markers,
+            [newMarker._id]: newMarker,
+          };
           const calculatedMarkers = await routeCalculation(
             Object.values(updatedMarkers),
             settingsData
@@ -190,12 +194,14 @@ const MapComponent = () => {
             height: "100%",
           }}
         >
+          {selectedMarker.position &&
           <SearchResultScreen
             marker={selectedMarker}
             markers={markers}
             setMarkers={setMarkers}
             closeOverlay={closeSearchOverlay}
           />
+        }
         </div>
       )}
       {detailsClicked && (

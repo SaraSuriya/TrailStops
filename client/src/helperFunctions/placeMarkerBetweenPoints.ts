@@ -1,4 +1,5 @@
 // Function to calculate where the clicked point will land between the closest two points on the route
+//DIEGO: inputPoint: clicked; routePointx : consecutive points of the route which have the most similar longintude
 export default function placeMarkerBetweenPoints(inputPoint: number[], routePoint1: number[], routePoint2: number[]) {
   const [inputPointLat, inputPointLon] = inputPoint;
   const [routePoint1Lat, routePoint1Lon] = routePoint1;

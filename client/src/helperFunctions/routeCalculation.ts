@@ -1,7 +1,7 @@
 import createGPXArray from "./createGPXArray";
 import haversineDistanceCalc from "./haversineDistanceCalc";
 import isMarkerBetweenRoutePoints from "./checkMarkerPosition";
-import { CalculationSettings, PointLngLat } from "../Interfaces/interfaces";
+import { CalculationSettings, DynamicMarkers, MarkerInterface, PointLngLat } from "../Interfaces/interfaces";
 
 // loop through all points in route from index1 to index2 to calculate an accurate distance.
 function fullDistanceCalc(markerDist: number, routeArr: PointLngLat[], routeIndex1: any, routeIndex2: any, distance: string): number {
@@ -15,7 +15,11 @@ function walkingTimeCalc(markerDist: number, speed: number) {
   return Math.round(markerDist / speed);
 }
 
-async function routeCalculation(markerArr: PointLngLat[], calculationSettings: CalculationSettings) {
+async function routeCalculation
+  (markerArr: MarkerInterface[], calculationSettings: CalculationSettings)
+  : Promise<DynamicMarkers> {
+    console.log('markerArr',markerArr)
+
   const routeArr: any = await createGPXArray("WHW.gpx");
   let markerArrCopy = JSON.parse(JSON.stringify(markerArr));
   // find where the markers fall between in the route
@@ -77,7 +81,7 @@ async function routeCalculation(markerArr: PointLngLat[], calculationSettings: C
     acc[curr._id] = curr;
     return acc;
   }, {});
-
+  console.log('output', output)
   return output;
 }
 

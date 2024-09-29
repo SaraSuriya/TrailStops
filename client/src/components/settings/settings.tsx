@@ -1,38 +1,59 @@
-import './settings.css';
-import { Select, FormControl, Button, MenuItem } from '@mui/material';
-import DBService from '../../services/DBService';
-import routeCalculation from '../../helperFunctions/routeCalculation';
-import { useEffect } from 'react';
+import "./settings.css";
+import { Select, FormControl, Button, MenuItem } from "@mui/material";
+import DBService from "../../services/DBService";
+import routeCalculation from "../../helperFunctions/routeCalculation";
+import { useEffect } from "react";
+import {
+  CalculationSettings,
+  DynamicMarkers,
+} from "../../Interfaces/interfaces";
 
 type SettingsPropsTypes = {
-   closeOverlay: any, settingsData: any, setSettingsData: any, markers: any, setMarkers: any ,setSettingsClicked : any
-}
+  markers: DynamicMarkers;
+  settingsData: CalculationSettings;
+  setSettingsData: (newCalculationSettings: CalculationSettings) => void;
+  setMarkers: (newDynamcMarkers: DynamicMarkers) => void;
+  closeOverlay: () => void;
+  setSettingsClicked: (clicked:Boolean) => void;
+};
 
-function Settings ({ closeOverlay, settingsData, setSettingsData, markers, setMarkers, setSettingsClicked }: SettingsPropsTypes) {
-
+function Settings({
+  closeOverlay,
+  settingsData,
+  setSettingsData,
+  markers,
+  setMarkers,
+  setSettingsClicked,
+}: SettingsPropsTypes) {
   // Effect to handle updates based on settingsData changes
   useEffect(() => {
     const updateMarkers = async () => {
       if (settingsData.speed !== undefined) {
-        const updatedMarkers = await routeCalculation(Object.values(markers), settingsData);
+        const updatedMarkers = await routeCalculation(
+          Object.values(markers),
+          settingsData
+        );
         DBService.updateAllMarkers(updatedMarkers);
         setMarkers(updatedMarkers);
       }
     };
 
     updateMarkers();
-  }, [settingsData]); // Trigger on settingsData change
+  }, [settingsData, markers, setMarkers]); // Trigger on settingsData change
 
   const changeSpeedSetting = (event: any) => {
     setSettingsData({ ...settingsData, speed: Number(event.target.value) });
   };
 
-  const changeDistanceSetting = async (event :any) => {
-    setSettingsData({ ...settingsData, distance: event.target.value });
-    const updatedMarkers = await routeCalculation(Object.values(markers), { ...settingsData, distance: event.target.value });
-    DBService.updateAllMarkers(updatedMarkers);
-    setMarkers(updatedMarkers);
-  };
+  // const changeDistanceSetting = async (event: any) => {
+  //   setSettingsData({ ...settingsData, distance: event.target.value });
+  //   const updatedMarkers = await routeCalculation(Object.values(markers), {
+  //     ...settingsData,
+  //     distance: event.target.value,
+  //   });
+  //   DBService.updateAllMarkers(updatedMarkers);
+  //   setMarkers(updatedMarkers);
+  // };
 
   return (
     <div style={{ marginBottom: "10px" }} className="settingsScreen">
@@ -53,7 +74,9 @@ function Settings ({ closeOverlay, settingsData, setSettingsData, markers, setMa
           </Select>
         </FormControl> */}
       </form>
-      <Button variant='contained' className='backButton' onClick={closeOverlay}>Back</Button>
+      <Button variant="contained" className="backButton" onClick={closeOverlay}>
+        Back
+      </Button>
     </div>
   );
 }
