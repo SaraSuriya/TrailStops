@@ -8,8 +8,6 @@ const router = require('../router.js')
 
 const mongoose = require('mongoose')
 
-const databaseName = 'test';
-
 const app = createServer();
 
 const mockResponse = () => {

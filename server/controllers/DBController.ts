@@ -1,8 +1,11 @@
-const { User, UserMarkers } = require('../models/schema');
+import { Request, Response } from 'express';
+import { User, UserMarkers } from '../models/schema';
+import { AddMarkerRequestBody } from '../types/markerInterfaces';
 
-exports.getMarkers = async (req, res) => {
+export const getMarkers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user_id } = req.query;
+    // const { user_id } = req.query;
+    const { user_id } = req.query as { user_id: string };
     const response = await UserMarkers.find({user_id: user_id})
     const positions = response.map(marker => marker);
     res.status(200).json(positions);
@@ -11,13 +14,30 @@ exports.getMarkers = async (req, res) => {
   }
 }
 
-exports.addMarker = async (req, res) => {
+export const addMarker = async (req: Request<{}, {}, AddMarkerRequestBody>, res: Response): Promise<void> => {
   try {
     const { _id, user_id, marker, updatedMarkers, settings } = req.body;
-    const newMarker = new UserMarkers({user_id: user_id, position: marker.position, hotel: marker.hotel, _id:_id, nextDist: marker.nextDist, prevDist: marker.prevDist, order: marker.order, walkingSpeed: settings.speed, distanceMeasure: settings.distance}); 
+    const newMarker = new UserMarkers({
+      user_id: user_id,
+      position: marker.position,
+      hotel: marker.hotel,
+      _id: _id,
+      nextDist: marker.nextDist,
+      prevDist: marker.prevDist,
+      order: marker.order,
+      walkingSpeed: settings.speed,
+      distanceMeasure: settings.distance,
+    });
     let response = await newMarker.save();
     for (const key in updatedMarkers) {
-      response = await UserMarkers.findOneAndUpdate({_id: key}, {prevDist: updatedMarkers[key].prevDist, nextDist: updatedMarkers[key].nextDist, order: updatedMarkers[key].order});
+      response = await UserMarkers.findOneAndUpdate(
+        { _id: key },
+        {
+          prevDist: updatedMarkers[key].prevDist,
+          nextDist: updatedMarkers[key].nextDist,
+          order: updatedMarkers[key].order,
+        }
+      );
     }
     res.status(200).json(response);
   } catch (error) {
@@ -25,9 +45,10 @@ exports.addMarker = async (req, res) => {
   }
 }
 
-exports.updateAllMarkers = async (req, res) => {
+export const updateAllMarkers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { markers } = req.body;
+    // const { markers } = req.body;
+    const { markers }: { markers: { [key: string]: { _id: string; [key: string]: any } } } = req.body;
     const updatePromises = Object.keys(markers).map(async (key) => {
       const marker = markers[key];
       return await UserMarkers.updateOne({ _id: marker._id }, marker);
@@ -39,7 +60,7 @@ exports.updateAllMarkers = async (req, res) => {
   }
 }
 
-exports.removeMarker = async (req, res) => {
+export const removeMarker = async (req: Request, res: Response): Promise<void> => {
   try {
     const { user_id, _id } = req.body;
     const response = await UserMarkers.deleteOne({user_id:user_id, _id:_id})
@@ -50,15 +71,17 @@ exports.removeMarker = async (req, res) => {
 }
 
 // TODO: add password hashing
-exports.addUser = async (req, res) => {
+export const addUser = async (req: Request, res: Response): Promise<void> => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
-    return res.status(400).json({ message: 'All fields required '})
+    res.status(400).json({ message: 'All fields required '})
+    return;
   }
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-        return res.status(400).json({ error: 'User with this email already exists' });
+        res.status(400).json({ error: 'User with this email already exists' });
+        return;
     }
     const newUser = new User({ name, email, password });
     const response = await newUser.save();
@@ -68,13 +91,21 @@ exports.addUser = async (req, res) => {
   }
 }
 
-exports.getUser = async (req, res) => {
-  const { email } = req.query;
-  const user = await User.findOne({ email });
-  res.status(200).json(user);
-}
+export const getUser = async (req: Request, res: Response): Promise<void> => {
+  const email = req.query.email as string;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).send(`Server Error: ${error}`);
+  }
+};
 
-exports.getAccommodation = async (req, res) => {
+export const getAccommodation = async (req: Request, res: Response): Promise<void> => {
   try {
   const { user_id, markerId } = req.query;
   const accommodation = await UserMarkers.findOne({ user_id: user_id, _id:markerId });
@@ -84,7 +115,7 @@ exports.getAccommodation = async (req, res) => {
   }
 }
 
-exports.addAccommodation = async (req, res) => {
+export const addAccommodation = async (req: Request, res: Response): Promise<void> => {
   try {
     const { user_id, hotel, markerId } = req.body;
     const response = await UserMarkers.updateOne({user_id: user_id, _id: markerId}, {hotel: hotel});

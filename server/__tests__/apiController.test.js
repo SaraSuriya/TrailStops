@@ -1,11 +1,11 @@
 
-const createServer = require('../server.js');
+const createServer = require('../server.ts');
 const mockingoose = require('mockingoose');
 const router = require('../router.js');
 const supertest = require('supertest');
 const UserMarkers = require('../models/schema.js');
-const {getAccommodationPic} = require('../controllers/apiController.js');
-const apiKey = require('../controllers/apiController.js');
+const {getAccommodationPic} = require('../controllers/apiController.ts');
+const apiKey = require('../controllers/apiController.ts');
 const request = supertest;
 
 const mongoose = require('mongoose');
