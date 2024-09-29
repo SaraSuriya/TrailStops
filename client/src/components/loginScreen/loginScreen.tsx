@@ -12,9 +12,10 @@ function LoginScreen() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // function to handle form submission
-  function handleSubmit(e) {
+  function handleSubmit(e : React.FormEvent) {
     e.preventDefault();
 
+    //DIEGO: if required property in the form element, why do we need this?:
     const emailError = formData.email === "";
     const passwordError = formData.password === "";
 
@@ -30,11 +31,12 @@ function LoginScreen() {
     setIsSubmitting(true);
     setErrorMessage("");
 
-    DBService.getUser(formData.email)
+    
+    DBService.getUser(formData.email)//DIEGO: I would compare password and email in the server, and response with the user data
       .then((data) => {
         if (data) {
           if (data.password === formData.password) {
-            navigate('/map', { state: { email: formData.email } });
+            navigate('/map', { state: { email: formData.email } });//make this a :param??
           } else {
             setErrorMessage("Unknown credentials");
           }
@@ -57,7 +59,7 @@ function LoginScreen() {
           label="Email"
           variant="outlined"
           value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          onChange={(e)  => setFormData({ ...formData, email: e.target.value })}
           error={formErrors.email}
           helperText={formErrors.email ? 'Email is required' : ''}
           margin='normal'

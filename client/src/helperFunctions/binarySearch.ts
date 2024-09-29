@@ -1,6 +1,9 @@
-export default function binarySearch(sortedRoute, targetLon) {
-  let low = 0;
-  let high = sortedRoute.length - 1;
+//This function returns the index of the route that are closest to the longitude clicked (targetLon)
+//i would set a minimla distance to the route to be a valid targetLon
+
+export default function binarySearch(sortedRoute: number[][], targetLon:number)  :number [] {
+  let low :number = 0;
+  let high :number = sortedRoute.length - 1;
 
   // Check for edge cases where the target is outside the route bounds
   if (targetLon <= sortedRoute[low][1]) {

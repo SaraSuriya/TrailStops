@@ -5,6 +5,8 @@ import 'leaflet-gpx';
 import 'leaflet/dist/leaflet.css';
 import './gpxMapLayer.css'
 
+
+
 // function to generate the route line on the map
 const GPXLayer = ({ gpxFile, passRoute}) => {
   const map = useMap();

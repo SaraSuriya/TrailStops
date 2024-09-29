@@ -1,5 +1,5 @@
-import Map from './components/map/map';
 import { createBrowserRouter,RouterProvider, } from "react-router-dom";
+import Map from './components/map/map';
 import ErrorPage from './components/errorScreen/errorScreen';
 import LoginScreen from './components/loginScreen/loginScreen';
 import RegisterScreen from './components/registerScreen/registerScreen';
@@ -7,8 +7,8 @@ import Settings from './components/settings/settings';
 import './App.css';
 
 // main app component, handles routing
-function App() {
-  const router = createBrowserRouter([
+function App()  : JSX.Element {
+  const router  = createBrowserRouter([
     {
       path: "/",
       element: <LoginScreen />,
@@ -23,13 +23,9 @@ function App() {
       path: "/map",
       element: <Map />,
     },
-    {
-      path: '/settings',
-      element: <Settings />,
-      errorElement: <ErrorPage />,
-    },
     
   ]);
+  
 
   return (
     <RouterProvider router={router} />
