@@ -6,15 +6,18 @@
     "allowJs": true,                                  /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */
     "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
     "strict": true,                                      /* Enable all strict type-checking options. */
-    "skipLibCheck": true ,                              /* Skip type checking all .d.ts files. */
-    "esModuleInterop": true,                /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
+    "skipLibCheck": true ,                              /* Skip type checking all .d.ts files. */                 // Enable ES Module compatibility
+    "allowSyntheticDefaultImports": true, 
+    "moduleResolution": "node", 
+    "esModuleInterop": true,
+                    /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
     "outDir": "./dist",                                   /* Specify an output folder for all emitted files. */
-    "rootDir": "./src",
+    "rootDir": "/",
     "types": ["jest", "node"],
     "typeRoots": ["./node_modules/@types"]
   },
     "include": ["./**/*.ts"], // Incluir todos los archivos .ts
-    "exclude": ["node_modules"] // Excluir node_modules
+    "exclude": ["node_modules"], // Excluir node_modules
 
     
     /* Visit https://aka.ms/tsconfig to read more about this file */
@@ -41,7 +44,7 @@
 
     /* Modules */
     // "rootDir": "./",                                  /* Specify the root folder within your source files. */
-    // "moduleResolution": "node10",                     /* Specify how TypeScript looks up a file from a given module specifier. */
+    // "moduleResolution": "node",                     /* Specify how TypeScript looks up a file from a given module specifier. */
     // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
     // "paths": {},                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */

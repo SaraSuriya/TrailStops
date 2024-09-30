@@ -4,6 +4,7 @@ import fetch from 'node-fetch';
 
 require('dotenv').config({path: '.env'});
 
+
 const apiKey: string | undefined = process.env.REACT_APP_GOOGLE_API_KEY;
 
 export const getAccommodation = async (req: Request, res: Response): Promise<void> => {

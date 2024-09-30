@@ -7,7 +7,7 @@ it('renders Leaflet map on loading', () => {
   expect(mapContainer).toBeInTheDocument();
 });
 
-it('adds route to of map on loading' , () => {
+it('adds route to map on loading' , () => {
   render(<App />);
   const routeContainer = screen.getByTestId('route-container');
   expect(routeContainer).toBeInTheDocument();

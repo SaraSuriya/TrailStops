@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { User, UserMarkers } from '../models/schema';
-import { AddMarkerRequestBody } from '../interfaces/marker-interfaces';
+import { AddMarkerRequestBody } from '../interfaces/marker_interfaces';
 
 export const getMarkers = async (req: Request, res: Response): Promise<void> => {
   try {
     const { user_id } = req.query as { user_id: string };
     const response = await UserMarkers.find({user_id: user_id})
-    const positions = response.map(marker => marker);
+    const positions = response.map((marker: UserMarkers) => marker);
     res.status(200).json(positions);
   } catch (error) {
     res.status(500).send(`Server Error0: ${error}`);
@@ -15,6 +15,7 @@ export const getMarkers = async (req: Request, res: Response): Promise<void> => 
 
 export const addMarker = async (req: Request<{}, {}, AddMarkerRequestBody>, res: Response): Promise<void> => {
   try {
+    let response: UserMarkers | null;
     const { _id, user_id, marker, updatedMarkers, settings } = req.body;
     const newMarker = new UserMarkers({
       user_id: user_id,
@@ -27,7 +28,7 @@ export const addMarker = async (req: Request<{}, {}, AddMarkerRequestBody>, res:
       walkingSpeed: settings.speed,
       distanceMeasure: settings.distance,
     });
-    let response = await newMarker.save();
+    response = await newMarker.save();
     for (const key in updatedMarkers) {
       response = await UserMarkers.findOneAndUpdate(
         { _id: key },

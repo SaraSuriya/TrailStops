@@ -1,4 +1,5 @@
 module.exports = {
+    preset: 'ts-jest',
     verbose: true,
     // clearMocks: true,
     globals: {
@@ -10,3 +11,5 @@ module.exports = {
       },
     setupFilesAfterEnv: ['@testing-library/jest-dom', './setupJest.js'],
   };
+
+  
